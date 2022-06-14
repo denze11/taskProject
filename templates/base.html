@@ -1,0 +1,65 @@
+{% load static %}
+{% load bootstrap5 %}
+
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/phone_input.js' %}"></script>
+    <script src="{% static 'js/bootstrap-datetimepicker.min.js' %}"></script>
+    <script src="{% static 'js/moment-with-locales.min.js' %}"></script>
+
+	<link rel="icon" href="{% static 'icon/favicon.ico' %}">
+
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body class="bg-light">
+    <aside>
+        <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active"><img src="{% static 'img/logo.png' %}" width="33px"
+                                                     alt="Логотип ГКБ№1 Чебоксары"></li>
+                    <li class="nav-item">
+                        <a href="{% url 'index' %}" {% if request.path == '/' %}class="nav-link active"{% else %}class="nav-link"{% endif %}>Главная<span class="sr-only"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'tasks' %}"  {% if request.path == '/tasks' %}class="nav-link active"{% else %}class="nav-link"{% endif %}>Весь список<span class="sr-only"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/category/1"  {% if request.path == '/category/1' %}class="nav-link active"{% else %}class="nav-link"{% endif %}>Общие<span class="sr-only"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/category/2"  {% if request.path == '/category/2' %}class="nav-link active"{% else %}class="nav-link"{% endif %}>Сантехника<span class="sr-only"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/category/3"  {% if request.path == '/category/3' %}class="nav-link active"{% else %}class="nav-link"{% endif %}>Электрика<span class="sr-only"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/category/4"  {% if request.path == '/category/4' %}class="nav-link active"{% else %}class="nav-link"{% endif %}>Медтехника<span class="sr-only"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/category/5"  {% if request.path == '/category/5' %}class="nav-link active"{% else %}class="nav-link"{% endif %}>Плотник и токарь<span class="sr-only"></span></a>
+                    </li>
+                </ul>
+            </div>
+	    </nav>
+    </aside>
+    <main>
+        {% block content %}
+
+        {% endblock content %}
+    </main>
+	<footer>
+		<p class="text-center bg-dark text-light fixed-bottom my-0 py-3">
+			&copy; 2009-2022 www.med.cap.ru — Медицинский портал Чувашской Республики.
+		</p>
+	</footer>
+</body>
+</html>

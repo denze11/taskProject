@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block title %}
+   Завершение задачи
+{% endblock %}
+
+{% block content %}
+    <div class="container-sm py-5 my-3">
+        <h2 class="text-center">
+			Добро пожаловать!
+		</h2>
+		<h6 class="text-center">
+			Для добавления заявки заполните форму и нажмите кнопку "Добавить заявку"
+		</h6>
+
+        <div class="form-group d-flex justify-content-center">
+		    <form method='post'>
+			    {% csrf_token %}
+                {% bootstrap_form form %}
+                    {{ form.media }}
+                    <button type="submit" class="btn btn-primary">Завершить</button>
+		    </form>
+        </div>
+    </div>
+{% endblock %}

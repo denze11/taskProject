@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block title %}
+   Список заявок
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid py-5 my-3">
+        <h2 class="text-center">
+	        Список заявок
+        </h2>
+        <div class="table-responsive pb-5">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr class="table-dark">
+{#                        <th scope="col">#</th>#}
+                        <th class="col-lg-1 text-center" scope="col">Дата</th>
+                        <th scope="col">Отделение</th>
+                        <th scope="col">Краткое описание проблемы</th>
+                        <th class="col-lg-1 text-center" scope="col">Ф.И.О Инициатора</th>
+                        <th class="col-lg-1 text-center" scope="col">Ф.И.О Исполнителя</th>
+                        <th class="col-lg-1 text-center" scope="col">Телефон для связи</th>
+                        <th class="col-lg-1 text-center" scope="col">Дата завершения</th>
+                        <th scope="col">Статус</th>
+                    </tr>
+                </thead>
+        		<tbody>
+        			{% for el in object_list %}
+                        {% if el.completed == False %}
+        				    <tr>
+                        {% else %}
+                            <tr class="table-success">
+                        {% endif %}
+{#                                <th scope="row">{{el.id}}</th>#}
+        					<td class="text-center"><small>{{el.date_created}}</small></td>
+        					<td><small>{{el.department}}</small></td>
+        					<td><small>{{el.description}}</small></td>
+        					<td class="text-center"><small>{{el.initiator}}</small></td>
+        					<td class="text-center"><small>{{el.performer|default_if_none:''}}</small></td>
+        					<td class="text-center"><small>{{el.phone_number}}</small></td>
+                            <td class="text-center"><small>{{ el.date_completed|default_if_none:''}}</small></td>
+                            <td>
+                                {% if el.completed == False %}
+								    <a class="btn-sm btn-danger" href="{% url 'update_task' el.pk %}"><small>Завершить</small></a>
+							    {% else %}
+								    <a class="btn-sm btn-success" href="{% url 'update_task' el.pk %}"><small>Завершено</small></a>
+							    {% endif %}
+                            </td>
+                        </tr>
+        			{% endfor %}
+        		</tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
