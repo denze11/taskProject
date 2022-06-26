@@ -10,10 +10,10 @@ class TaskAdmin(admin.ModelAdmin):
     search_fields = ('description',)
 
 
-@admin.register(Department)
-class DepartmentAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name',)
-    list_display_links = ('id', 'name',)
+# @admin.register(Department)
+# class DepartmentAdmin(admin.ModelAdmin):
+#     list_display = ('id', 'name',)
+#     list_display_links = ('id', 'name',)
 
 
 @admin.register(Category)

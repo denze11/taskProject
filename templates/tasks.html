@@ -2,55 +2,85 @@
 {% load bootstrap5 %}
 
 {% block title %}
-   Список заявок
+    Список заявок
 {% endblock %}
 
 {% block content %}
-    <div class="container-fluid py-5 my-3">
-        <h2 class="text-center">
-	        Список заявок
-        </h2>
-        <div class="table-responsive pb-5">
-            <table class="table table-bordered table-hover">
-                <thead>
-                    <tr class="table-dark">
-{#                        <th scope="col">#</th>#}
-                        <th class="col-lg-1 text-center" scope="col">Дата</th>
-                        <th scope="col">Отделение</th>
-                        <th scope="col">Краткое описание проблемы</th>
-                        <th class="col-lg-1 text-center" scope="col">Ф.И.О Инициатора</th>
-                        <th class="col-lg-1 text-center" scope="col">Ф.И.О Исполнителя</th>
-                        <th class="col-lg-1 text-center" scope="col">Телефон для связи</th>
-                        <th class="col-lg-1 text-center" scope="col">Дата завершения</th>
-                        <th scope="col">Статус</th>
-                    </tr>
-                </thead>
-        		<tbody>
-        			{% for el in object_list %}
-                        {% if el.completed == False %}
-        				    <tr>
-                        {% else %}
-                            <tr class="table-success">
-                        {% endif %}
-{#                                <th scope="row">{{el.id}}</th>#}
-        					<td class="text-center"><small>{{el.date_created}}</small></td>
-        					<td><small>{{el.department}}</small></td>
-        					<td><small>{{el.description}}</small></td>
-        					<td class="text-center"><small>{{el.initiator}}</small></td>
-        					<td class="text-center"><small>{{el.performer|default_if_none:''}}</small></td>
-        					<td class="text-center"><small>{{el.phone_number}}</small></td>
-                            <td class="text-center"><small>{{ el.date_completed|default_if_none:''}}</small></td>
-                            <td>
-                                {% if el.completed == False %}
-								    <a class="btn-sm btn-danger" href="{% url 'update_task' el.pk %}"><small>Завершить</small></a>
-							    {% else %}
-								    <a class="btn-sm btn-success" href="{% url 'update_task' el.pk %}"><small>Завершено</small></a>
-							    {% endif %}
-                            </td>
+    {% if user.is_authenticated %}
+        <div class="container-fluid py-5 my-3">
+            <h2 class="text-center">
+                Список заявок
+            </h2>
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr class="table-dark">
+                            <th class="col" scope="col">Дата</th>
+                            <th scope="col">Отделение</th>
+                            <th scope="col">Краткое описание проблемы</th>
+                            <th class="col" scope="col">Ф.И.О Инициатора</th>
+                            <th class="col" scope="col">Ф.И.О Исполнителя</th>
+                            <th class="col" scope="col">Телефон для связи</th>
+                            <th class="col" scope="col">Дата завершения</th>
+                            <th scope="col">Статус</th>
                         </tr>
-        			{% endfor %}
-        		</tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for el in object_list %}
+                            {% if request.user == el.department or user.is_superuser %}
+                                {% if el.completed == False %}
+                                    <tr>
+                                {% else %}
+                                    <tr class="table-success">
+                                {% endif %}
+                                    <td><small>{{el.date_created}}</small></td>
+                                    <td><small>{{ el.department.first_name }}</small></td>
+                                    <td><small>{{el.description}}</small></td>
+                                    <td><small>{{el.initiator}}</small></td>
+                                    <td><small>{{el.performer|default_if_none:''}}</small></td>
+                                    <td><small>{{el.phone_number}}</small></td>
+                                    <td><small>{{ el.date_completed|default_if_none:''}}</small></td>
+                                    <td>
+                                        {% if el.completed == False %}
+                                            <a class="btn-sm btn-danger" href="{% url 'update_task' el.pk %}"><small>Завершить</small></a>
+                                        {% else %}
+                                            <a class="btn-sm btn-success" href="{% url 'update_task' el.pk %}"><small>Завершено</small></a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Назад</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">
+                    {% endif %}
+                    {% for p in page_obj.paginator.page_range %}
+                        <li class="page-item {% if p == page_obj.number %}active{% endif %}"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Вперед</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">
+                    {% endif %}
+                </ul>
+            </nav>
         </div>
-    </div>
+    {% else %}
+        <meta http-equiv="REFRESH" content="0;url={% url 'login' %}">
+    {% endif %}
+    <a href="#" id="toTop">
+        <svg width="10pt" height="10pt" viewBox="0 0 630 630" version="1.1">
+            <g>
+                <g>
+                    <path d="M489.229,442.468L254.563,37.135c-3.797-6.592-14.677-6.592-18.453,0L1.443,442.468c-1.92,3.307-1.92,7.36-0.021,10.667
+                c1.92,3.307,5.44,5.333,9.259,5.333h469.333c3.819,0,7.339-2.027,9.259-5.333C491.128,449.849,491.128,445.775,489.229,442.468z"/>
+                </g>
+            </g>
+        </svg>
+    </a>
 {% endblock %}

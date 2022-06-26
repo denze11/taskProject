@@ -2,56 +2,77 @@
 {% load bootstrap5 %}
 
 {% block title %}
-   Список заявок
+    Список заявок
 {% endblock %}
 
 {% block content %}
-    <div class="container-fluid py-5 my-3">
-        <h2 class="text-center">
-	        Список заявок
-        </h2>
-    {{ task.department }}
-        <div class="table-responsive pb-5">
-            <table class="table table-bordered table-hover">
-                <thead>
-                    <tr class="table-dark">
-{#                        <th scope="col">#</th>#}
-                        <th scope="col">Дата</th>
-                        <th scope="col">Отделение</th>
-                        <th scope="col">Краткое описание проблемы</th>
-                        <th scope="col">Ф.И.О Инициатора</th>
-                        <th scope="col">Ф.И.О Исполнителя</th>
-                        <th scope="col">Телефон для связи</th>
-                        <th scope="col">Дата завершения</th>
-                        <th scope="col">Статус</th>
-                    </tr>
-                </thead>
-        		<tbody>
-        			{% for el in category_task %}
-                        {% if el.completed == False %}
-        				    <tr>
-                        {% else %}
-                            <tr class="table-success">
-                        {% endif %}
-{#                                <th scope="row">{{el.id}}</th>#}
-        					<td><small>{{el.date_created}}</small></td>
-        					<td><small>{{el.department}}</small></td>
-        					<td><small>{{el.description}}</small></td>
-        					<td><small>{{el.initiator}}</small></td>
-        					<td><small>{{el.performer|default_if_none:''}}</small></td>
-        					<td><small>{{el.phone_number}}</small></td>
-                            <td><small>{{ el.date_completed|default_if_none:''}}</small></td>
-                            <td>
-                                {% if el.completed == False %}
-								    <a class="btn-sm btn-danger" href="{% url 'update_task' el.pk %}"><small>Завершить</small></a>
-							    {% else %}
-								    <a class="btn-sm btn-success" href="{% url 'update_task' el.pk %}"><small>Завершено</small></a>
-							    {% endif %}
-                            </td>
+    {% if user.is_authenticated %}
+        <div class="container-fluid py-5 my-3">
+            <h2 class="text-center">
+                Список заявок
+            </h2>
+        {{ task.department }}
+            <div class="table-responsive pb-5">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr class="table-dark">
+    {#                        <th scope="col">#</th>#}
+                            <th scope="col">Дата</th>
+                            <th scope="col">Отделение</th>
+                            <th scope="col">Краткое описание проблемы</th>
+                            <th scope="col">Ф.И.О Инициатора</th>
+                            <th scope="col">Ф.И.О Исполнителя</th>
+                            <th scope="col">Телефон для связи</th>
+                            <th scope="col">Дата завершения</th>
+                            <th scope="col">Статус</th>
                         </tr>
-        			{% endfor %}
-        		</tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for el in category_task %}
+                            {% if el.completed == False %}
+                                <tr>
+                            {% else %}
+                                <tr class="table-success">
+                            {% endif %}
+    {#                                <th scope="row">{{el.id}}</th>#}
+                                <td><small>{{el.date_created}}</small></td>
+                                <td><small>{{ el.department.first_name }}</small></td>
+                                <td><small>{{el.description}}</small></td>
+                                <td><small>{{el.initiator}}</small></td>
+                                <td><small>{{el.performer|default_if_none:''}}</small></td>
+                                <td><small>{{el.phone_number}}</small></td>
+                                <td><small>{{ el.date_completed|default_if_none:''}}</small></td>
+                                <td>
+                                    {% if el.completed == False %}
+                                        <a class="btn-sm btn-danger" href="{% url 'update_task' el.pk %}"><small>Завершить</small></a>
+                                    {% else %}
+                                        <a class="btn-sm btn-success" href="{% url 'update_task' el.pk %}"><small>Завершено</small></a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Назад</a></li>
+                {% else %}
+                    <li class="disabled"><a href="#">
+                {% endif %}
+                {% for p in page_obj.paginator.page_range %}
+                    <li class="page-item {% if p == page_obj.number %}active{% endif %}"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Вперед</a></li>
+                {% else %}
+                    <li class="disabled"><a href="#">
+                {% endif %}
+            </ul>
+        </nav>
+    {% else %}
+        <meta http-equiv="REFRESH" content="0;url={% url 'login' %}">
+    {% endif %}
 {% endblock %}

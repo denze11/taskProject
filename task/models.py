@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from datetime import datetime, date
+from django.contrib.auth.models import User
 
 
 class Category(models.Model):
@@ -31,14 +32,18 @@ class Department(models.Model):
 
 
 class Task(models.Model):
-    department = models.ForeignKey(Department, verbose_name='Подразделение', on_delete=models.CASCADE, null=True)
+    department = models.ForeignKey(
+        User, verbose_name='Имя автора', on_delete=models.CASCADE)
     description = models.TextField('Описание')
     initiator = models.CharField('Инициатор', max_length=250)
-    performer = models.CharField('Исполнитель', max_length=250, blank=True, null=True, default='',)
+    performer = models.CharField(
+        'Исполнитель', max_length=250, blank=True, null=True, default='',)
     phone_number = models.CharField('Номер телефона', max_length=250)
-    date_completed = models.DateTimeField('Дата завершения', auto_now=False, blank=True, null=True)
+    date_completed = models.DateTimeField(
+        'Дата завершения', auto_now=False, blank=True, null=True)
     date_created = models.DateTimeField('Дата создания', auto_now_add=True,)
-    category = models.ForeignKey(Category, verbose_name='Категория', on_delete=models.CASCADE, null=True)
+    category = models.ForeignKey(
+        Category, verbose_name='Категория', on_delete=models.CASCADE, null=True)
     completed = models.BooleanField('Завершить', default=False)
 
     def __str__(self):
@@ -50,5 +55,3 @@ class Task(models.Model):
     class Meta:
         verbose_name = 'Заявка'
         verbose_name_plural = 'Заявки'
-
-

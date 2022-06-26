@@ -14,7 +14,8 @@ class TaskView(ListView):
 
 
 def category_view(request, category_name):
-    category_task = Task.objects.filter(category=category_name)
+    category_task = Task.objects.filter(
+        category=category_name).order_by('-date_created')
     return render(request, 'category.html', {'category_name': category_name, 'category_task': category_task})
 
 
@@ -24,6 +25,12 @@ class AddTaskView(CreateView):
     template_name = 'index.html'
     # fields = '__all__'
     # fields = ('category', 'department', 'initiator', 'phone_number', 'description',)
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.department = self.request.user
+        self.object.save()
+        return super(AddTaskView, self).form_valid(form)
 
 
 class UpdateTaskView(UpdateView):

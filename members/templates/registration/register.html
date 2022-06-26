@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block title %}
+    Регистрация
+{% endblock %}
+
+{% block content %}
+<div class="container py-5 my-3">
+    <h2 class="text-center">
+        Зарегистрируйте новый аккаунт.
+    </h2>
+    <h6 class="text-center text-muted">
+        Для регистрации заполните форму ниже и нажмите кнопку "Регистрация".
+    </h6>
+
+    <div class="form-group d-flex justify-content-center">
+        <form method='post'>
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {{ form.media }}
+            <button type="submit" class="btn btn-primary">Регистрация</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

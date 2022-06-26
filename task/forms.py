@@ -7,10 +7,9 @@ from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ('category', 'department', 'initiator', 'phone_number', 'description',)
+        fields = ('category', 'initiator', 'phone_number', 'description',)
         widgets = {
             'category': forms.Select(attrs={'class': 'form-control'}),
-            'department': forms.Select(attrs={'class': 'form-control'}),
             'initiator': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ф.И.О'}),
             'phone_number': forms.TextInput(attrs={'class': 'form-control', 'type': 'tel', 'data-tel-input': True,
                                                    'placeholder': 'Пример ввода 89278679792', 'maxlength': '18'}),
