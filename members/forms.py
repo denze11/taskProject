@@ -9,21 +9,25 @@ username_validator = UnicodeUsernameValidator()
 
 
 class SignUpForm(UserCreationForm):
-    first_name = forms.CharField(label=_(
-        'Подразделение'), required=True, help_text='Введите: Подразделение', max_length=250,)
-    password1 = forms.CharField(label=_(
-        'Password'), help_text=password_validation.password_validators_help_text_html())
-    password2 = forms.CharField(label=_('Повторите пароль'), help_text=_(
-        'Просто введите тот же пароль, для подтверждения.'))
-    username = forms.CharField(label=_('Логин'), max_length=150, help_text=_('Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.'),
-                               validators=[username_validator], error_messages={'unique': _("A user with that username already exists.")},)
+    first_name = forms.CharField(label=_('Подразделение'), max_length=255, min_length=4, required=True, help_text='Введите: Подразделение',
+                                 widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введите: Подразделение'}))
+    password1 = forms.CharField(label=_('Пароль'),
+                                widget=(forms.PasswordInput(
+                                    attrs={'class': 'form-control'})),
+                                help_text=password_validation.password_validators_help_text_html())
+    password2 = forms.CharField(label=_('Подтверждение пароля'), widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+                                help_text=_('Просто введите тот же пароль, для подтверждения.'))
+    username = forms.CharField(
+        label=_('Логин'),
+        max_length=150,
+        help_text=_(
+            'Обязательное поле. Не более 150 символов. Только буквы, цифры и символы @/./+/-/_.'),
+        validators=[username_validator],
+        error_messages={'unique': _(
+            "Пользователь с таким именем уже существует.")},
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
 
     class Meta:
         model = User
         fields = ('username', 'first_name', 'password1', 'password2',)
-        widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
-            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Подразделение'}),
-            'password1': forms.PasswordInput(attrs={'class': 'form-control'}),
-            'password2': forms.PasswordInput(attrs={'class': 'form-control'}),
-        }
